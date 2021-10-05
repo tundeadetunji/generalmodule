@@ -5,43 +5,79 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.util.Locale;
+
 public class Feedback {
+    TextToSpeech tts;
+
     Context context;
 
     public Feedback(Context context) {
         this.context = context;
+        tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        //can't do it
+                    }
+                } /*else {
+
+                }*/
+            }
+        });
     }
 
-    public void feedback(String string){
+    public void ShutDownTTS(){
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+
+    public void toast(String string){
         Toast.makeText(context, string, Toast.LENGTH_LONG).show();
     }
 
-    public void feedback(String string, int Toast_Length){
+    public void toast(String string, int Toast_Length){
         Toast.makeText(context, string, Toast_Length).show();
     }
 
-    public void Inform(String title, String content, String bigText, int Notification_Compat_Priority,  int Small_Icon_Drawable_Resource, Class<?> Activity_Class, int notificationId, String CHANNEL_ID, String channel_name, String channel_description){
-        createNotificationChannel(CHANNEL_ID, channel_name, channel_description);
+    public void feedback(String message){
+        if (message.length() < 1) return;
+        tts.speak(message, TextToSpeech.QUEUE_ADD, null);
+    }
+
+    public void inform(String title, String content, String ticker, String bigText, int NotificationCompat_Priority,  int Small_Icon_Drawable_Resource,  int Large_Icon_Drawable_Resource, Class<?> Activity_Class, int notificationId, String channel_id, String channel_name, String channel_description){
+        createNotificationChannel(channel_id, channel_name, channel_description);
 
         Intent intent = new Intent(context, Activity_Class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel_id)
                 .setSmallIcon(Small_Icon_Drawable_Resource)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setPriority(Notification_Compat_Priority)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(bigText))
+                .setPriority(NotificationCompat_Priority)
+                //.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setTicker(ticker)
+                .setWhen(System.currentTimeMillis())
+
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(context.getResources(), Large_Icon_Drawable_Resource)).bigLargeIcon(null))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationId, builder.build());
