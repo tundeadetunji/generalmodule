@@ -18,11 +18,15 @@ public class Feedback {
         this.context = context;
     }
 
+    public void feedback(String string){
+        Toast.makeText(context, string, Toast.LENGTH_LONG).show();
+    }
+
     public void feedback(String string, int Toast_Length){
         Toast.makeText(context, string, Toast_Length).show();
     }
 
-    private void Inform(String title, String content, String bigText, int Notification_Compat_Priority,  int Small_Icon_Drawable_Resource, Class<?> Activity_Class, int notificationId, String CHANNEL_ID, String channel_name, String channel_description){
+    public void Inform(String title, String content, String bigText, int Notification_Compat_Priority,  int Small_Icon_Drawable_Resource, Class<?> Activity_Class, int notificationId, String CHANNEL_ID, String channel_name, String channel_description){
         createNotificationChannel(CHANNEL_ID, channel_name, channel_description);
 
         Intent intent = new Intent(context, Activity_Class);
