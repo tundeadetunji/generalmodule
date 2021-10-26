@@ -55,7 +55,26 @@ public class Feedback {
 
     public void feedback(String message){
         if (message.length() < 1) return;
+
+        if (tts == null){
+            tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int i) {
+                    if (i == TextToSpeech.SUCCESS) {
+                        int result = tts.setLanguage(Locale.US);
+                        if (result == TextToSpeech.LANG_MISSING_DATA ||
+                                result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                            //can't do it
+                        }
+                    } /*else {
+
+                }*/
+                }
+            });
+        }
+
         tts.speak(message, TextToSpeech.QUEUE_ADD, null);
+        ShutDownTTS();
     }
 
     public void inform(String title, String content, String ticker, String bigText, int NotificationCompat_Priority,  int Small_Icon_Drawable_Resource,  int Large_Icon_Drawable_Resource, Class<?> Activity_Class, int notificationId, String channel_id, String channel_name, String channel_description){

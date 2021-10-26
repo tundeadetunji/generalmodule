@@ -3,20 +3,24 @@ package com.inovationware.generalmodule;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
 public class Machine {
 
-    Context context;
+    //Context context;
 
+/*
     public Machine(Context context) {
         this.context = context;
     }
+*/
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void ClipboardSetText(String text_to_copy) {
+    public static void ClipboardSetText(Context context, String text_to_copy) {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             clipboard.clearPrimaryClip();
@@ -25,7 +29,7 @@ public class Machine {
         clipboard.setPrimaryClip(clip);
     }
 
-    public String ClipboardGetText() {
+    public static String ClipboardGetText(Context context) {
         String clipboardText;
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
 
@@ -34,6 +38,17 @@ public class Machine {
 
         return clipboardText;
     }
+
+    public static boolean thereIsInternet(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
+    }
+
 
 
 }
