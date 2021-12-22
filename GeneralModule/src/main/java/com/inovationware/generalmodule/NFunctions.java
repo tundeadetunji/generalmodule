@@ -272,7 +272,7 @@ public class NFunctions {
         else{
             prefx = text.trim() + "ing";
         }
-        //mix, deliver
+        //mix, deliver, cradle, juggle
 
         // Return RTrim(prefx) & " " & LTrim(suffx)
         return prefx;
