@@ -9,21 +9,21 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 public class Multimedia {
-    public static void LoadImage(Context context, Activity activity, ImageView imageView, int DrawableResourceInt){
+    public static void loadImage(Context context, Activity activity, ImageView imageView, int DrawableResourceInt){
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), DrawableResourceInt);
         Glide.with(activity).load(bitmap).circleCrop().into(imageView);
     }
 
-    public static void LoadImage(Context context, Activity activity, ImageView imageView, String url){
+    public static void loadImage(Context context, Activity activity, ImageView imageView, String url){
         Glide.with(activity).load(String.valueOf(url)).circleCrop().into(imageView);
     }
 
-    public static void LoadPolygonImage(Context context, Activity activity, ImageView imageView, int DrawableResourceInt){
+    public static void loadPolygonImage(Context context, Activity activity, ImageView imageView, int DrawableResourceInt){
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), DrawableResourceInt);
         Glide.with(activity).load(bitmap).into(imageView);
     }
 
-    public static void LoadPolygonImage(Context context, Activity activity, ImageView imageView, String url){
+    public static void loadPolygonImage(Context context, Activity activity, ImageView imageView, String url){
         Glide.with(activity).load(String.valueOf(url)).into(imageView);
     }
 

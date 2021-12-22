@@ -20,7 +20,7 @@ public class Machine {
 */
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void ClipboardSetText(Context context, String text_to_copy) {
+    public static void clipboardSetText(Context context, String text_to_copy) {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             clipboard.clearPrimaryClip();
@@ -29,7 +29,7 @@ public class Machine {
         clipboard.setPrimaryClip(clip);
     }
 
-    public static String ClipboardGetText(Context context) {
+    public static String clipboardGetText(Context context) {
         String clipboardText;
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
 
@@ -48,7 +48,4 @@ public class Machine {
 
         return isConnected;
     }
-
-
-
 }

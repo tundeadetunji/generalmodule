@@ -7,7 +7,7 @@ public class NFunctions {
         Left, Middle, Right // , AsArray, AsListOfString, AsListToString
     }
 
-    public static ArrayList<String> SplitTextInSplits(String string_to_split, String separator) {
+    public static ArrayList<String> splitTextInSplits(String string_to_split, String separator) {
         if (string_to_split.trim().length() < 1 || separator.length() < 1) {
             return new ArrayList<String>();
         }
@@ -19,14 +19,14 @@ public class NFunctions {
         return arrayList;
     }
 
-    public static String SplitTextInThree(String string_to_split, String separator, SideToReturn side_to_return) {
+    public static String splitTextInThree(String string_to_split, String separator, SideToReturn side_to_return) {
         if (string_to_split.trim().length() < 1 || separator.length() < 1) {
             return "";
         }
 
         String r = "";
 
-        ArrayList<String> s = SplitTextInSplits(string_to_split, separator);
+        ArrayList<String> s = splitTextInSplits(string_to_split, separator);
 
         switch (side_to_return) {
             case Left:
@@ -42,14 +42,14 @@ public class NFunctions {
         return r;
     }
 
-    public static String SplitTextInTwo(String string_to_split, String separator, SideToReturn side_to_return) {
+    public static String splitTextInTwo(String string_to_split, String separator, SideToReturn side_to_return) {
         if (string_to_split.trim().length() < 1 || separator.length() < 1) {
             return "";
         }
 
         String r = "";
 
-        ArrayList<String> s = SplitTextInSplits(string_to_split, separator);
+        ArrayList<String> s = splitTextInSplits(string_to_split, separator);
 
         switch (side_to_return) {
             case Left:
@@ -64,21 +64,21 @@ public class NFunctions {
                     for (int i = 1; i < s.size(); i++) {
                         l.add(s.get(i));
                     }
-                    r = JoinTextFromSplits(l, separator);
+                    r = joinTextFromSplits(l, separator);
                 }
                 break;
         }
         return r;
     }
 
-    public static String SplitText(String string_to_split, String separator, SideToReturn side_to_return) {
+    public static String splitText(String string_to_split, String separator, SideToReturn side_to_return) {
         if (string_to_split.trim().length() < 1 || separator.length() < 1) {
             return "";
         }
 
         String r = "";
 
-        ArrayList<String> s = SplitTextInSplits(string_to_split, separator);
+        ArrayList<String> s = splitTextInSplits(string_to_split, separator);
 
         switch (side_to_return) {
             case Left:
@@ -90,13 +90,13 @@ public class NFunctions {
                 for (int i = 1; i < s.size(); i++) {
                     l.add(s.get(i));
                 }
-                r = JoinTextFromSplits(l, separator);
+                r = joinTextFromSplits(l, separator);
                 break;
         }
         return r;
     }
 
-    public static String JoinTextFromSplits(ArrayList<String> splits, String separator) {
+    public static String joinTextFromSplits(ArrayList<String> splits, String separator) {
         if (splits.size() < 1 || separator.length() < 1) {
             return "";
         }
@@ -116,7 +116,7 @@ public class NFunctions {
             return "";
         }
 
-        return SplitTextInSplits(text, " ").get(0);
+        return splitTextInSplits(text, " ").get(0);
     }
 
     public static String otherWords(String text) {
@@ -124,7 +124,7 @@ public class NFunctions {
             return "";
         }
 
-        return SplitTextInTwo(text, " ", SideToReturn.Right);
+        return splitTextInTwo(text, " ", SideToReturn.Right);
     }
 
     public static String[] lastThreeLetters(String text) {
@@ -138,7 +138,7 @@ public class NFunctions {
                 String.valueOf(text.charAt(text.length() - 2)), String.valueOf(text.charAt(text.length() - 1))};
     }
 
-    public static boolean IsConsonant(String text) {
+    public static boolean isConsonant(String text) {
         boolean isConsonant = false;
 
         if (text.equals("b") || text.equals("c") || text.equals("d") || text.equals("f") || text.equals("g") || text.equals("h") || text.equals("j")
@@ -153,7 +153,7 @@ public class NFunctions {
         return isConsonant;
     }
 
-    public static boolean IsVowel(String text) {
+    public static boolean isVowel(String text) {
         boolean isVowel = false;
         if (text.equals("a") || text.equals("e") || text.equals("i") || text.equals("o") || text.equals("u") || text.equals("A") || text.equals("E")
                 || text.equals("I") || text.equals("O") || text.equals("U")) {
@@ -162,10 +162,10 @@ public class NFunctions {
         return isVowel;
     }
 
-    public static boolean IsAlphabet(String text) {
+    public static boolean isAlphabet(String text) {
         boolean isAlphabet = false;
 
-        if (IsVowel(text) || IsConsonant(text)) {
+        if (isVowel(text) || isConsonant(text)) {
             isAlphabet = true;
         }
         return isAlphabet;
@@ -179,8 +179,8 @@ public class NFunctions {
         String prefx = "";
         String[] lastThree = lastThreeLetters(text);
 
-        if (!IsAlphabet(lastThree[0]) || !IsAlphabet(lastThree[1])
-                || !IsAlphabet(lastThree[2])) {
+        if (!isAlphabet(lastThree[0]) || !isAlphabet(lastThree[1])
+                || !isAlphabet(lastThree[2])) {
             return "";
         }
 
@@ -203,7 +203,7 @@ public class NFunctions {
         // prefx = text.Trim & "ing"
         // End If
 
-        if (IsConsonant(a) && IsVowel(b) && IsConsonant(c)) {
+        if (isConsonant(a) && isVowel(b) && isConsonant(c)) {
             // swim, stop, run, begin
             prefx = text + text.substring(text.length() - 1).trim() + "ing";
         }
@@ -211,7 +211,7 @@ public class NFunctions {
             //lie, die
             prefx = text.substring(0, text.length()-2).trim() + "ying";
         }
-        else if (IsVowel(a) && IsConsonant(b) && c.equals("e")){
+        else if (isVowel(a) && isConsonant(b) && c.equals("e")){
             //come, mistake
             prefx = text.substring(0,text.length() - 1).trim() + "ing";
         }
@@ -233,8 +233,8 @@ public class NFunctions {
         String prefx = "";
         String[] lastThree = lastThreeLetters(text);
 
-        if (!IsAlphabet(lastThree[0]) || !IsAlphabet(lastThree[1])
-                || !IsAlphabet(lastThree[2])) {
+        if (!isAlphabet(lastThree[0]) || !isAlphabet(lastThree[1])
+                || !isAlphabet(lastThree[2])) {
             return "";
         }
 
@@ -257,7 +257,7 @@ public class NFunctions {
         // prefx = text.Trim & "ing"
         // End If
 
-        if (IsConsonant(a) && IsVowel(b) && IsConsonant(c)) {
+        if (isConsonant(a) && isVowel(b) && isConsonant(c)) {
             // swim, stop, run, begin
             prefx = text + text.substring(text.length() - 1).trim() + "ing";
         }
@@ -265,7 +265,7 @@ public class NFunctions {
             //lie, die
             prefx = text.substring(0, text.length()-2).trim() + "ying";
         }
-        else if (IsVowel(a) && IsConsonant(b) && c.equals("e")){
+        else if (isVowel(a) && isConsonant(b) && c.equals("e")){
             //come, mistake
             prefx = text.substring(0,text.length() - 1).trim() + "ing";
         }
@@ -283,7 +283,7 @@ public class NFunctions {
      * @param text text to check
      * @return true if text.trim() is empty
      */
-    public static boolean IsEmptyString(String text){
+    public static boolean isEmptyString(String text){
         return text.trim().length() < 1;
     }
 
@@ -293,7 +293,7 @@ public class NFunctions {
      * @param should_trim check text.trim() instead
      * @return true if it's eventually empty
      */
-    public static boolean IsEmptyString(String text, boolean should_trim){
+    public static boolean isEmptyString(String text, boolean should_trim){
         boolean r;
         if(should_trim){
             r = text.trim().length() < 1;
@@ -304,7 +304,7 @@ public class NFunctions {
         return r;
     }
 
-    public static boolean IsPhraseOrSentence(String text){
+    public static boolean isPhraseOrSentence(String text){
 /*
         If text.Trim.Length < 1 Then Return False
         If firstWord(text).Length > 0 And otherWords(text).Length > 0 Then
@@ -315,7 +315,7 @@ public class NFunctions {
 */
         boolean isPhraseOrSentence = false;
 
-        if (!IsEmptyString(text) && (!IsEmptyString(firstWord(text))) && !IsEmptyString(otherWords(text))){
+        if (!isEmptyString(text) && (!isEmptyString(firstWord(text))) && !isEmptyString(otherWords(text))){
             isPhraseOrSentence = true;
         }
         return isPhraseOrSentence;

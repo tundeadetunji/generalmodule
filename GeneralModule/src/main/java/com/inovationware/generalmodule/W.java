@@ -5,35 +5,35 @@ import android.view.View;
 import android.widget.TextView;
 
 public class W {
-    public static String Content(TextView textView){
+    public static String content(TextView textView){
         return textView.getText().toString();
     }
 
-    public static void Clear(TextView textView){
+    public static void clear(TextView textView){
         textView.setText("");
     }
 
-    public static void Clear(TextView textView, String newText){
+    public static void clear(TextView textView, String newText){
         textView.setText(newText);
     }
 
-    public static boolean IsEmpty(TextView textView){
+    public static boolean isEmpty(TextView textView){
         return textView.getText().toString().trim().length() < 1;
     }
 
-    public static void ToUpperCase(TextView textView){
+    public static void toUpperCase(TextView textView){
         String s = textView.getText().toString();
         String t = s.toUpperCase();
         textView.setText(t);
     }
 
-    public static void ToLowerCase(TextView textView){
+    public static void toLowerCase(TextView textView){
         String s = textView.getText().toString();
         String t = s.toLowerCase();
         textView.setText(t);
     }
 
-    public static void EnableControls(View[] control_){
+    public static void enableControls(View[] control_){
         if (control_.length < 1)return;
         for(int i = 0; i < control_.length; i++){
             try{
@@ -45,7 +45,7 @@ public class W {
         }
     }
 
-    public static void EnableControls(View[] control_, boolean state_){
+    public static void enableControls(View[] control_, boolean state_){
         if (control_.length < 1)return;
         for(int i = 0; i < control_.length; i++){
             try{
@@ -57,7 +57,7 @@ public class W {
         }
     }
 
-    public static void EnableControl(View control_){
+    public static void enableControl(View control_){
         try{
             control_.setEnabled(true);
         }
@@ -66,7 +66,7 @@ public class W {
         }
     }
 
-    public static void EnableControl(View control_, boolean state_){
+    public static void enableControl(View control_, boolean state_){
         try{
             control_.setEnabled(state_);
         }
@@ -75,7 +75,7 @@ public class W {
         }
     }
 
-    public static void DisableControls(View[] control_){
+    public static void disableControls(View[] control_){
         if (control_.length < 1)return;
         for(int i = 0; i < control_.length; i++){
             try{
@@ -87,7 +87,7 @@ public class W {
         }
     }
 
-    public static void DisableControl(View control_){
+    public static void disableControl(View control_){
         try{
             control_.setEnabled(false);
         }
@@ -96,12 +96,12 @@ public class W {
         }
     }
 
-    public static boolean IsEmail(String text){
+    public static boolean isEmail(String text){
         return !(text.trim().length() < 1) && Patterns.EMAIL_ADDRESS.matcher(text).matches();
     }
 
-    public static boolean IsEmail(TextView textView){
-        return IsEmail(textView.getText().toString());
+    public static boolean isEmail(TextView textView){
+        return isEmail(textView.getText().toString());
     }
 
 

@@ -18,7 +18,7 @@ import java.util.Locale;
 public class Feedback {
     TextToSpeech tts;
 
-    Context context;
+    private Context context;
 
     public Feedback(Context context) {
         this.context = context;
