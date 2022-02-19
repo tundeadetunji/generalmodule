@@ -18,8 +18,6 @@ public class ServerSide {
     private String directory;
     private String code;
 
-    Retrofit retrofit;
-
     private String reply;
 
     public ServerSide(String baseUrl, String directory, String code, String username, String password, String app_name) {
@@ -30,22 +28,16 @@ public class ServerSide {
         this.directory = directory;
         this.code = code;
 
-        retrofit = new Retrofit.Builder()
+
+    }
+
+    private void readValue(String file, TextView textView) {
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-    }
 
-    public void readValue(String file, TextView textView) {
-        ReadValueFromServer(file, textView);
-    }
-
-    public void writeValue(String file, String text, Boolean append, String store){
-        WriteValueToServer(file, append, store, text);
-    }
-
-    private void ReadValueFromServer(String file, TextView textView) {
         IReadModelAPI readmodelAPI = retrofit.create(IReadModelAPI.class);
         Call<ReadModel> call = readmodelAPI.getContentFromServer(toPath(baseUrl), toPath(directory), code, username, password, file, app_name);
         call.enqueue(new Callback<ReadModel>() {
@@ -69,7 +61,13 @@ public class ServerSide {
         });
     }
 
-    private void WriteValueToServer(String file, Boolean append, String store, String text){
+    private void writeValue(String file, Boolean append, String store, String text) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
         IWriteModelAPI writemodelAPI = retrofit.create(IWriteModelAPI.class);
         Call<WriteModel> call = writemodelAPI.getContentFromServer(toPath(baseUrl), toPath(directory), code, username, password, file, app_name, append, store, text);
         call.enqueue(new Callback<WriteModel>() {
@@ -92,12 +90,11 @@ public class ServerSide {
         });
     }
 
-    private String toPath(String string){
-        String result="";
-        if(string.endsWith("/")){
+    private String toPath(String string) {
+        String result = "";
+        if (string.endsWith("/")) {
             result = string;
-        }
-        else{
+        } else {
             result = string + "/";
         }
         return result;
