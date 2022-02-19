@@ -31,7 +31,7 @@ public class ServerSide {
 
     }
 
-    private void readValue(String file, TextView textView) {
+    public void readValue(String file, TextView textView) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -61,7 +61,7 @@ public class ServerSide {
         });
     }
 
-    private void writeValue(String file, Boolean append, String store, String text) {
+    public void writeValue(String file, Boolean append, String store, String text) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
