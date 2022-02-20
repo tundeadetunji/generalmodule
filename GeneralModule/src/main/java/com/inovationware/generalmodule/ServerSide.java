@@ -48,7 +48,7 @@ public class ServerSide {
         return conn;
     }
 
-    private void writeValue(String value){
+    public void writeValue(String value){
         try {
 //            ServerSide serverSideConnect = new ServerSide(getString(R.string._user), getString(R.string._pass), getString(R.string._DB), getString(R.string._server));
             Connection connect = ServerSide.con();
@@ -70,7 +70,7 @@ public class ServerSide {
 
     }
 
-    private Object readValue(){
+    public Object readValue(){
         Object settings = null;
         try {
             Connection connect = ServerSide.con();
