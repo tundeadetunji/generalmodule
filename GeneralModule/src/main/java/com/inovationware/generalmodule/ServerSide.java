@@ -9,14 +9,21 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ServerSide {
+    private static String _user;
+    private static String _pass;
+    private static String _DB;
+    private static String _server;
+
+    public ServerSide(String _user, String _pass, String _DB, String _server) {
+        this._user = _user;
+        this._pass = _pass;
+        this._DB = _DB;
+        this._server = _server;
+    }
+
     @SuppressLint("NewApi")
     public static Connection con() {
 
-        String _user = "User2008";
-        String _pass = "cvwdxnhfAv754ilwE_6";
-        String _DB = "Stock2008";
-        //String _server = "41.190.2.102:1500";
-        String _server = "mssql.inovationware.com:1500";
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
