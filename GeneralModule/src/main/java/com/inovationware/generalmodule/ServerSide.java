@@ -309,29 +309,28 @@ public class ServerSide {
         Object result = null;
         ArrayList<Object> kv = parameters_values;
 
-        String queryStmt = query;
+//        String queryStmt = query;
         try {
             Connection connect = ServerSide.con();
 
-            PreparedStatement preparedStatement = connect.prepareStatement(queryStmt);
-
-            if (parameters_values != null){
-                if (parameters_values.size() > 0){
-                    for (int i = 0; i < kv.size(); i++){
-                        preparedStatement.setObject(i+1, kv.get(i));
-                    }
-                }
-            }
+            Statement statement = connect.createStatement();
+//            if (parameters_values != null){
+//                if (parameters_values.size() > 0){
+//                    for (int i = 0; i < kv.size(); i++){
+//                        preparedStatement.setObject(i+1, kv.get(i));
+//                    }
+//                }
+//            }
 
             //ResultSet rows = preparedStatement.executeQuery(queryStmt);
-            ResultSet rows = preparedStatement.executeQuery();
+            ResultSet rows = statement.executeQuery(query);
 
             if (rows != null) {
                 while (rows.next()) {
                     result = rows.getObject(1);
                 }
             }
-            preparedStatement.close();
+            statement.close();
         } catch (SQLException e) {
             //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
             result = e.getMessage().toString();
