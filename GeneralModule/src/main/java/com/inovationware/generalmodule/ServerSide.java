@@ -315,9 +315,11 @@ public class ServerSide {
 
             PreparedStatement preparedStatement = connect.prepareStatement(queryStmt);
 
-            if (parameters_values.size() > 0){
-                for (int i = 0; i < kv.size(); i++){
-                    preparedStatement.setObject(i+1, kv.get(i));
+            if (parameters_values != null){
+                if (parameters_values.size() > 0){
+                    for (int i = 0; i < kv.size(); i++){
+                        preparedStatement.setObject(i+1, kv.get(i));
+                    }
                 }
             }
 
