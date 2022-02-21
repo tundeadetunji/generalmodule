@@ -253,7 +253,7 @@ public class ServerSide {
         return rowsExist(table);
     }
 
-    private void PrepareTable(String table, String col) {
+    public void PrepareTable(String table, String col) {
         try {
             if (rowsExist(table) == false) {
                 // 'create table
