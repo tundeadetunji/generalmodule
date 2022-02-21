@@ -323,7 +323,8 @@ public class ServerSide {
                 }
             }
 
-            ResultSet rows = preparedStatement.executeQuery(queryStmt);
+            //ResultSet rows = preparedStatement.executeQuery(queryStmt);
+            ResultSet rows = preparedStatement.executeQuery();
 
             if (rows != null) {
                 while (rows.next()) {
