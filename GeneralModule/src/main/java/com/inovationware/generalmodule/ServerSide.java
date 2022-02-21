@@ -253,11 +253,11 @@ public class ServerSide {
         return rowsExist(table);
     }
 
-    public void PrepareTable(String table, String col) {
+    private void PrepareTable(String table, String col) {
         try {
             if (rowsExist(table) == false) {
                 // 'create table
-                String sql = "CREATE TABLE [" + database + "].[dbo].[" + table + "]([RecordSerial] [int] IDENTITY(1,1) NOT NULL, [" + col + "] [nvarchar](max) NULL)";
+                String sql = "CREATE TABLE [" + database + "].[dbo].[" + table + "_" + col + "]([RecordSerial] [int] IDENTITY(1,1) NOT NULL, [" + col + "] [nvarchar](max) NULL)";
 
                 Connection connect = ServerSide.con();
 
@@ -286,8 +286,10 @@ public class ServerSide {
             PreparedStatement preparedStatement = connect
                     .prepareStatement(queryStmt);
 
-            for (int i = 0; i <= kv.size()-1; i++){
-                preparedStatement.setObject(i+1, kv.get(i));
+            if (parameters_values.size() > 0){
+                for (int i = 0; i <= kv.size()-1; i++){
+                    preparedStatement.setObject(i+1, kv.get(i));
+                }
             }
 
             preparedStatement.executeUpdate();
@@ -313,13 +315,11 @@ public class ServerSide {
 
             PreparedStatement preparedStatement = connect.prepareStatement(queryStmt);
 
-            for (int i = 0; i <= kv.size()-1; i++){
-                preparedStatement.setObject(i+1, kv.get(i));
+            if (parameters_values.size() > 0){
+                for (int i = 0; i < kv.size(); i++){
+                    preparedStatement.setObject(i+1, kv.get(i));
+                }
             }
-
-//            for (int i = 0; i < kv.size(); i++){
-//                preparedStatement.setObject(i+1, kv.get(i));
-//            }
 
             ResultSet rows = preparedStatement.executeQuery(queryStmt);
 
