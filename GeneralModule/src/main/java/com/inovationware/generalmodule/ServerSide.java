@@ -299,8 +299,10 @@ public class ServerSide {
             preparedStatement.close();
         } catch (SQLException e) {
             //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+            result = e.getMessage().toString();
         } catch (Exception e) {
             //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+            result = e.getMessage().toString();
         }
 
         return result;
