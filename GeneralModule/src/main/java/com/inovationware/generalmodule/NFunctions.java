@@ -2,10 +2,12 @@ package com.inovationware.generalmodule;
 
 import java.util.ArrayList;
 
+import com.inovationware.generalmodule.InternalTypes.*;
+
 public class NFunctions {
-    enum SideToReturn {
-        Left, Middle, Right // , AsArray, AsListOfString, AsListToString
-    }
+//    enum SideToReturn {
+//        Left, Middle, Right // , AsArray, AsListOfString, AsListToString
+//    }
 
     public static ArrayList<String> splitTextInSplits(String string_to_split, String separator) {
         if (string_to_split.trim().length() < 1 || separator.length() < 1) {
@@ -55,7 +57,6 @@ public class NFunctions {
             case Left:
                 r = s.get(0);
                 break;
-            case Middle:
             case Right:
                 if (s.size() == 2) {
                     r = s.get(1);
@@ -84,7 +85,6 @@ public class NFunctions {
             case Left:
                 r = s.get(0);
                 break;
-            case Middle:
             case Right:
                 ArrayList<String> l = new ArrayList<String>();
                 for (int i = 1; i < s.size(); i++) {
@@ -206,16 +206,13 @@ public class NFunctions {
         if (isConsonant(a) && isVowel(b) && isConsonant(c)) {
             // swim, stop, run, begin
             prefx = text + text.substring(text.length() - 1).trim() + "ing";
-        }
-        else if (b.equals("i") && c.equals("e")){
+        } else if (b.equals("i") && c.equals("e")) {
             //lie, die
-            prefx = text.substring(0, text.length()-2).trim() + "ying";
-        }
-        else if (isVowel(a) && isConsonant(b) && c.equals("e")){
+            prefx = text.substring(0, text.length() - 2).trim() + "ying";
+        } else if (isVowel(a) && isConsonant(b) && c.equals("e")) {
             //come, mistake
-            prefx = text.substring(0,text.length() - 1).trim() + "ing";
-        }
-        else{
+            prefx = text.substring(0, text.length() - 1).trim() + "ing";
+        } else {
             prefx = text.trim() + "ing";
         }
         //mix, deliver
@@ -260,16 +257,13 @@ public class NFunctions {
         if (isConsonant(a) && isVowel(b) && isConsonant(c)) {
             // swim, stop, run, begin
             prefx = text + text.substring(text.length() - 1).trim() + "ing";
-        }
-        else if (b.equals("i") && c.equals("e")){
+        } else if (b.equals("i") && c.equals("e")) {
             //lie, die
-            prefx = text.substring(0, text.length()-2).trim() + "ying";
-        }
-        else if (isVowel(a) && isConsonant(b) && c.equals("e")){
+            prefx = text.substring(0, text.length() - 2).trim() + "ying";
+        } else if (isVowel(a) && isConsonant(b) && c.equals("e")) {
             //come, mistake
-            prefx = text.substring(0,text.length() - 1).trim() + "ing";
-        }
-        else{
+            prefx = text.substring(0, text.length() - 1).trim() + "ing";
+        } else {
             prefx = text.trim() + "ing";
         }
         //mix, deliver, cradle, juggle
@@ -280,31 +274,32 @@ public class NFunctions {
 
     /**
      * Checks if string is empty
+     *
      * @param text text to check
      * @return true if text.trim() is empty
      */
-    public static boolean isEmptyString(String text){
+    public static boolean isEmptyString(String text) {
         return text.trim().length() < 1;
     }
 
     /**
      * Checks if string is empty
-     * @param text text to check
+     *
+     * @param text        text to check
      * @param should_trim check text.trim() instead
      * @return true if it's eventually empty
      */
-    public static boolean isEmptyString(String text, boolean should_trim){
+    public static boolean isEmptyString(String text, boolean should_trim) {
         boolean r;
-        if(should_trim){
+        if (should_trim) {
             r = text.trim().length() < 1;
-        }
-        else{
-            r = text.length()< 1;
+        } else {
+            r = text.length() < 1;
         }
         return r;
     }
 
-    public static boolean isPhraseOrSentence(String text){
+    public static boolean isPhraseOrSentence(String text) {
 /*
         If text.Trim.Length < 1 Then Return False
         If firstWord(text).Length > 0 And otherWords(text).Length > 0 Then
@@ -315,11 +310,145 @@ public class NFunctions {
 */
         boolean isPhraseOrSentence = false;
 
-        if (!isEmptyString(text) && (!isEmptyString(firstWord(text))) && !isEmptyString(otherWords(text))){
+        if (!isEmptyString(text) && (!isEmptyString(firstWord(text))) && !isEmptyString(otherWords(text))) {
             isPhraseOrSentence = true;
         }
         return isPhraseOrSentence;
     }
 
+    private static String transformWord(String word, InternalTypes.TextCase casing) {
+        if (word.length() < 1)
+            return "";
+
+        String s = word;
+        String r = "";
+
+        if (casing == TextCase.Capitalize) {
+            r = s.substring(0, 0).toUpperCase() + s.substring(1).toLowerCase();
+        } else if (casing == TextCase.LowerCase) {
+            r = s.toLowerCase();
+        } else if (casing == TextCase.UpperCase) {
+            r = s.toUpperCase();
+        } else if (casing == TextCase.None) {
+            r = s;
+        }
+
+        return r;
+    }
+
+    private static String transformSingleLineText(String text, TextCase casing, String separator_) {
+        if (text.trim().length() < 1)
+            return "";
+
+        ArrayList<String> d = splitTextInSplits(text, separator_);
+        ArrayList<String> o = new ArrayList<String>();
+        {
+            ArrayList<String> withBlock = d;
+            for (int i = 0; i <= withBlock.size() - 1; i++)
+                o.add(transformWord(d.get(i), casing));
+        }
+        String r = "";
+        {
+            ArrayList<String> withBlock = o;
+            for (int i = 0; i <= withBlock.size() - 1; i++) {
+                r += o.get(i);
+                if (i != withBlock.size() - 1)
+                    r += separator_;
+            }
+        }
+        return r.trim();
+    }
+
+    private static String transformMultiLineText(String text, TextCase casing, String separator_) {
+        String s = text.trim();
+        ArrayList<String> o = splitTextInSplits(s, "\n");
+        ArrayList<String> f = new ArrayList<String>();
+        {
+            ArrayList<String> withBlock = o;
+            for (int i = 0; i <= withBlock.size() - 1; i++)
+                f.add(transformSingleLineText(o.get(i).trim(), casing, separator_));
+        }
+        return ListToString(f, separator_, false);
+    }
+
+    /***
+     * Changes Text Case to Upper, Lower or Capitalize
+     * @param text
+     * @param casing
+     * @param separator_ defaults to " " (space)
+     */
+    public static String transformText(String text, TextCase casing, String separator_)
+    {
+        String s = text;
+        if (s.length() < 1)
+            return "";
+        if (s.contains("\n"))
+            return transformMultiLineText(text, casing, separator_);
+        else
+            return transformSingleLineText(text, casing, separator_);
+    }
+
+
+    /***
+     * List (ArrayList) joined with delimiter to become single String
+     * @param list_or_array
+     * @param delimiter defaults to "\n"
+     * @param format_output_for_web defaults to false - use PrepareForIO(FormatFor.Web) or not.
+     * @return
+     */
+    public static String ListToString(ArrayList<String> list_or_array, String delimiter, boolean format_output_for_web) {
+        String delimeter = delimiter;
+
+        ArrayList<String> l = list_or_array;
+        String r = "";
+
+        ArrayList<String> withBlock = l;
+        for (int i = 0; i <= withBlock.size() - 1; i++)
+            r += l.get(i) + delimeter;
+
+        if (format_output_for_web)
+            return prepareForIO(r, FormatFor.Web);
+        else
+            return r;
+    }
+
+    public static String prepareForIO(String str_, FormatFor output_) {
+        if (output_ == FormatFor.Custom)
+            return CustomMarkup(str_);
+
+        String trimmed_, CR_less, CRLFless, TABless;
+        trimmed_ = str_.trim();
+        str_ = trimmed_;
+
+        if (output_ == FormatFor.Web) {
+            CRLFless = str_.replace("\n", "<br />");
+            str_ = CRLFless;
+        } else if (output_ == FormatFor.JavaScript) {
+            CRLFless = str_.replace("\n", "\n");
+            str_ = CRLFless;
+        }
+
+        if (output_ == FormatFor.Web) {
+            CR_less = str_.replace("\n", "<br />");
+            str_ = CR_less;
+        } else if (output_ == FormatFor.JavaScript) {
+            CR_less = str_.replace("\n", "\n");
+            str_ = CR_less;
+        }
+
+        if (output_ == FormatFor.Web) {
+            TABless = str_.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+            str_ = TABless;
+        } else if (output_ == FormatFor.JavaScript) {
+            TABless = str_.replace("\t", "\t");
+            str_ = TABless;
+        }
+
+        return str_;
+    }
+
+    private static String CustomMarkup(String str_) {
+        return str_;
+    }
 
 }

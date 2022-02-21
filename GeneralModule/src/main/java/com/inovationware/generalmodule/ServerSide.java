@@ -4,12 +4,21 @@ import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.inovationware.generalmodule.DW.buildInsertString;
+import static com.inovationware.generalmodule.DW.buildSelectString;
+import static com.inovationware.generalmodule.DW.buildUpdateString;
+import static com.inovationware.generalmodule.NFunctions.joinTextFromSplits;
+import static com.inovationware.generalmodule.NFunctions.transformText;
 
 public class ServerSide {
     private static String username;
@@ -21,7 +30,7 @@ public class ServerSide {
         this.server = server;
         this.database = database;
         this.username = username;
-        this.password=password;
+        this.password = password;
     }
 
     @SuppressLint("NewApi")
@@ -48,50 +57,253 @@ public class ServerSide {
         return conn;
     }
 
-    public void writeValue(String value){
+    public void writeValue(String file, String text, String app_name, InternalTypes.InformationIsStored store) {
+
         try {
-//            ServerSide serverSideConnect = new ServerSide(getString(R.string._user), getString(R.string._pass), getString(R.string._DB), getString(R.string._server));
+            String file_ = file;
+            app_name = GetName(app_name);
+
+            String col = GetName(file_);
+            String table = GetName(app_name) + "_" + col;
+
+            ArrayList<String> insert_keys = new ArrayList<String>();
+            insert_keys.add(col);
+
+            ArrayList<Object> kv = new ArrayList<Object>();
+            kv.add(col);
+            kv.add(text);
+
+            String query = buildInsertString(table, insert_keys);
+
+            PrepareTable(table, col);
+
+            if (tableHasData(table)) {
+                if (store == InternalTypes.InformationIsStored.OneOff) {
+                    // 'update
+                    query = buildUpdateString(table, insert_keys, null);
+                    commitSequel(query, kv);
+                } else {
+                    commitSequel(query, kv);
+                }
+            } else{
+                 commitSequel(query, kv);
+            }
+
+        } catch (Exception ex) {
+        }
+
+    }
+
+    public Object readValue(String file_, String app_name)
+    {
+        try
+        {
+            file_ = file_;
+            app_name = GetName(app_name);
+
+            String col = GetName(file_);
+            String table = GetName(app_name) + "_" + col;
+            ArrayList<String> select_params = new ArrayList<String>();
+            select_params.add(col);
+            String query = buildSelectString(table, select_params, null, null, InternalTypes.OrderBy.ASC);
+            return qData(query, null);
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+
+
+//    private void writeValue(String value) {
+//        try {
+//            Connection connect = ServerSide.con();
+//
+//            String queryStmt = "UPDATE Windowsapplication999_Settings SET Settings='" + value + "'";
+//
+//            PreparedStatement preparedStatement = connect
+//                    .prepareStatement(queryStmt);
+//
+//            preparedStatement.executeUpdate();
+//
+//            preparedStatement.close();
+//
+//        } catch (SQLException e) {
+//            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+//        } catch (Exception e) {
+//            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+//        }
+//
+//    }
+
+//    private Object readValue() {
+//        Object settings = null;
+//        try {
+//            Connection connect = ServerSide.con();
+//
+//            String queryStmt = "SELECT Settings FROM Windowsapplication999_Settings ORDER BY RecordSerial ASC";
+//
+//            Statement statement = connect.createStatement();
+//            ResultSet rows = statement.executeQuery(queryStmt);
+//
+//            while (rows.next()) {
+//                settings = rows.getString("Settings");
+//            }
+//            statement.close();
+//        } catch (SQLException e) {
+//            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+//        } catch (Exception e) {
+//            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+//        }
+//
+//        return settings;
+//
+//    }
+
+    private static String GetName(String str__) {
+        String file__ = str__.replace("_", " ");
+        ArrayList<String> str = new NFunctions().splitTextInSplits(file__, " ");
+        ArrayList<String> l = new ArrayList<String>();
+        for (int i = 0; i <= str.size() - 1; i++)
+            l.add(transformText(str.get(i), InternalTypes.TextCase.Capitalize, " "));
+
+        return joinTextFromSplits(l, "");
+    }
+
+    public boolean tableExists(String table) {
+        boolean exists = false;
+        ArrayList<String> names = new ArrayList<String>();
+        try {
             Connection connect = ServerSide.con();
 
-            String queryStmt = "UPDATE Windowsapplication999_Settings SET Settings='" + value + "'";
+            ArrayList<String> select_params = new ArrayList<String>();
+            select_params.add("name");
+            String queryStmt = buildSelectString(table, select_params, null, "name", InternalTypes.OrderBy.ASC);
 
-            PreparedStatement preparedStatement = connect
-                    .prepareStatement(queryStmt);
+            Statement statement = connect.createStatement();
+            ResultSet rows = statement.executeQuery(queryStmt);
 
-            preparedStatement.executeUpdate();
-
-            preparedStatement.close();
-
+            if (rows != null) {
+                while (rows.next()) {
+                    names.add(rows.getString("name").toLowerCase());
+                }
+            }
+            statement.close();
         } catch (SQLException e) {
             //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
         } catch (Exception e) {
             //textDetails.setText("Exception\n\n" + e.getMessage().toString());
         }
 
+        if (names.contains(table.toLowerCase())) {
+            exists = true;
+        }
+        return exists;
     }
 
-    public Object readValue(){
-        Object settings = null;
+    public boolean tableHasData(String table) {
+        boolean hasData = false;
         try {
             Connection connect = ServerSide.con();
 
-            String queryStmt = "SELECT Settings FROM Windowsapplication999_Settings ORDER BY RecordSerial ASC";
+            String queryStmt = "SELECT * FROM " + table;
 
             Statement statement = connect.createStatement();
             ResultSet rows = statement.executeQuery(queryStmt);
 
-            while(rows.next()){
-                settings = rows.getString("Settings");
+            int size = 0;
+            if (rows != null) {
+                hasData = true;
             }
+
             statement.close();
+        } catch (SQLException e) {
+            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+        } catch (Exception e) {
+            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
         }
-        catch (SQLException e) {
+        return hasData;
+    }
+
+    private void PrepareTable(String table, String col) {
+        try {
+            if (tableExists(table) == false) {
+                // 'create table
+                String sql = "CREATE TABLE [" + database + "].[dbo].[" + table + "]([RecordSerial] [int] IDENTITY(1,1) NOT NULL, [" + col + "] [nvarchar](max) NULL)";
+
+                Connection connect = ServerSide.con();
+
+                String queryStmt = sql;
+
+                PreparedStatement preparedStatement = connect
+                        .prepareStatement(queryStmt);
+
+                preparedStatement.executeUpdate();
+
+                preparedStatement.close();
+            }
+        } catch (Exception ex) {
+        }
+    }
+
+
+    public boolean commitSequel(String query, ArrayList<Object> parameters_keys_values_) {
+        boolean result = false;
+        ArrayList<Object> kv = parameters_keys_values_;
+
+        String queryStmt = query;
+        try {
+            Connection connect = ServerSide.con();
+
+            PreparedStatement preparedStatement = connect
+                    .prepareStatement(queryStmt);
+
+            for (int i = 0; i < kv.size(); i++){
+                preparedStatement.setObject(i+1, kv.get(i));
+            }
+
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            result = true;
+
+        } catch (SQLException e) {
+            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+        } catch (Exception e) {
+            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+        }
+        return result;
+    }
+
+    public Object qData(String query, ArrayList<Object> parameters_keys_values_) {
+        Object result = null;
+        ArrayList<Object> kv = parameters_keys_values_;
+
+        String queryStmt = query;
+        try {
+            Connection connect = ServerSide.con();
+
+            PreparedStatement preparedStatement = connect.prepareStatement(queryStmt);
+
+            for (int i = 0; i < kv.size(); i++){
+                preparedStatement.setObject(i+1, kv.get(i));
+            }
+
+            ResultSet rows = preparedStatement.executeQuery(queryStmt);
+
+            if (rows != null) {
+                while (rows.next()) {
+                    result = rows.getObject(1);
+                }
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
             //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
         } catch (Exception e) {
             //textDetails.setText("Exception\n\n" + e.getMessage().toString());
         }
 
-        return settings;
+        return result;
 
     }
 
