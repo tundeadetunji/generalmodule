@@ -77,7 +77,7 @@ public class ServerSide {
 
             PrepareTable(table, col);
 
-            if (tableHasData(table)) {
+            if (rowsExist(table)) {
                 if (store == InternalTypes.InformationIsStored.OneOff) {
                     // 'update
                     query = buildUpdateString(table, insert_keys, null);
@@ -170,38 +170,38 @@ public class ServerSide {
         return joinTextFromSplits(l, "");
     }
 
-    public boolean tableExists(String table) {
-        boolean exists = false;
-        ArrayList<String> names = new ArrayList<String>();
-        try {
-            Connection connect = ServerSide.con();
+//    public boolean tableExists(String table) {
+//        boolean exists = false;
+//        ArrayList<String> names = new ArrayList<String>();
+//        try {
+//            Connection connect = ServerSide.con();
+//
+//            ArrayList<String> select_params = new ArrayList<String>();
+//            select_params.add("name");
+//            String queryStmt = buildSelectString(table, select_params, null, "name", InternalTypes.OrderBy.ASC);
+//
+//            Statement statement = connect.createStatement();
+//            ResultSet rows = statement.executeQuery(queryStmt);
+//
+//            if (rows != null) {
+//                while (rows.next()) {
+//                    names.add(rows.getString("name").toLowerCase());
+//                }
+//            }
+//            statement.close();
+//        } catch (SQLException e) {
+//            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+//        } catch (Exception e) {
+//            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+//        }
+//
+//        if (names.contains(table.toLowerCase())) {
+//            exists = true;
+//        }
+//        return exists;
+//    }
 
-            ArrayList<String> select_params = new ArrayList<String>();
-            select_params.add("name");
-            String queryStmt = buildSelectString(table, select_params, null, "name", InternalTypes.OrderBy.ASC);
-
-            Statement statement = connect.createStatement();
-            ResultSet rows = statement.executeQuery(queryStmt);
-
-            if (rows != null) {
-                while (rows.next()) {
-                    names.add(rows.getString("name").toLowerCase());
-                }
-            }
-            statement.close();
-        } catch (SQLException e) {
-            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
-        } catch (Exception e) {
-            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
-        }
-
-        if (names.contains(table.toLowerCase())) {
-            exists = true;
-        }
-        return exists;
-    }
-
-    public boolean tableHasData(String table) {
+    private boolean tableHasData_WORKING(String table) {
         boolean hasData = false;
         try {
             Connection connect = ServerSide.con();
@@ -225,9 +225,37 @@ public class ServerSide {
         return hasData;
     }
 
+    public boolean rowsExist(String table) {
+        boolean hasData = false;
+        try {
+            Connection connect = ServerSide.con();
+
+            String queryStmt = "SELECT * FROM " + table;
+
+            Statement statement = connect.createStatement();
+            ResultSet rows = statement.executeQuery(queryStmt);
+
+            int size = 0;
+            if (rows != null) {
+                hasData = true;
+            }
+
+            statement.close();
+        } catch (SQLException e) {
+            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+        } catch (Exception e) {
+            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+        }
+        return hasData;
+    }
+
+    public boolean tableExists(String table){
+        return rowsExist(table);
+    }
+
     private void PrepareTable(String table, String col) {
         try {
-            if (tableExists(table) == false) {
+            if (rowsExist(table) == false) {
                 // 'create table
                 String sql = "CREATE TABLE [" + database + "].[dbo].[" + table + "]([RecordSerial] [int] IDENTITY(1,1) NOT NULL, [" + col + "] [nvarchar](max) NULL)";
 
