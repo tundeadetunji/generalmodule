@@ -247,9 +247,9 @@ public class ServerSide {
     }
 
 
-    public boolean commitSequel(String query, ArrayList<Object> parameters_keys_values_) {
+    public boolean commitSequel(String query, ArrayList<Object> parameters_values) {
         boolean result = false;
-        ArrayList<Object> kv = parameters_keys_values_;
+        ArrayList<Object> kv = parameters_values;
 
         String queryStmt = query;
         try {
@@ -275,9 +275,9 @@ public class ServerSide {
         return result;
     }
 
-    public Object qData(String query, ArrayList<Object> parameters_keys_values_) {
+    public Object qData(String query, ArrayList<Object> parameters_values) {
         Object result = null;
-        ArrayList<Object> kv = parameters_keys_values_;
+        ArrayList<Object> kv = parameters_values;
 
         String queryStmt = query;
         try {
@@ -288,6 +288,10 @@ public class ServerSide {
             for (int i = 0; i < kv.size(); i++){
                 preparedStatement.setObject(i+1, kv.get(i));
             }
+
+//            for (int i = 0; i < kv.size(); i++){
+//                preparedStatement.setObject(i+1, kv.get(i));
+//            }
 
             ResultSet rows = preparedStatement.executeQuery(queryStmt);
 
