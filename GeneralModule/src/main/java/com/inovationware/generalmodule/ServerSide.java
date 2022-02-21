@@ -258,7 +258,7 @@ public class ServerSide {
             PreparedStatement preparedStatement = connect
                     .prepareStatement(queryStmt);
 
-            for (int i = 0; i < kv.size(); i++){
+            for (int i = 0; i <= kv.size()-1; i++){
                 preparedStatement.setObject(i+1, kv.get(i));
             }
 
@@ -285,7 +285,7 @@ public class ServerSide {
 
             PreparedStatement preparedStatement = connect.prepareStatement(queryStmt);
 
-            for (int i = 0; i < kv.size(); i++){
+            for (int i = 0; i <= kv.size()-1; i++){
                 preparedStatement.setObject(i+1, kv.get(i));
             }
 
