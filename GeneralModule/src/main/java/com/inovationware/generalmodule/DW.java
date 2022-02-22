@@ -64,7 +64,7 @@ public class DW {
 //        return v;
 //    }
 
-    public static String buildInsertString(String t_, ArrayList<String> insert_keys, ArrayList<Object> _values) {
+    public static String buildInsertString(String t_, ArrayList<String> insert_keys) {
         String v = "INSERT INTO " + t_ + " (";
 
         for (int i = 0; i <= insert_keys.size() - 1; i++) {
@@ -76,8 +76,7 @@ public class DW {
         v += ") VALUES (";
 
         for (int j = 0; j <= insert_keys.size() - 1; j++) {
-//w            v += "@" + insert_keys.get(j);
-            v += toType(_values.get(j));
+            v += "?"; // + insert_keys.get(j);
             if (insert_keys.size() > 1 & j != insert_keys.size() - 1)
                 v += ", ";
         }

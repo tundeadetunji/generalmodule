@@ -249,29 +249,30 @@ public class ServerSide {
     }
 
 
-    public String commitSequel(String query) {
-        String result = "false";
-
-        try {
-            Connection connect = ServerSide.con();
-
-            Statement statement = connect.createStatement();
-            int rows = statement.executeUpdate(query);
-
-            if (rows > 0) {
-                result = "true";
-            }
-
-            statement.close();
-            connect.close(); //new
-
-        } catch (SQLException e) {
-            result=("SQLException\n\n" + e.getMessage().toString());
-        } catch (Exception e) {
-            result=("Exception\n\n" + e.getMessage().toString());
-        }
-        return result;
-    }
+    //check
+//    public boolean commitSequel(String query) {
+//        boolean result = false;
+//
+//        try {
+//            Connection connect = ServerSide.con();
+//
+//            Statement statement = connect.createStatement();
+//            int rows = statement.executeUpdate(query);
+//
+//            if (rows > 0) {
+//                result = true;
+//            }
+//
+//            statement.close();
+//            connect.close(); //new
+//
+//        } catch (SQLException e) {
+//            //result=("SQLException\n\n" + e.getMessage().toString());
+//        } catch (Exception e) {
+//            //result=("Exception\n\n" + e.getMessage().toString());
+//        }
+//        return result;
+//    }
 
     public String qData(String query) {
         String result = null;
@@ -304,37 +305,36 @@ public class ServerSide {
         return first;
     }
 
-    //not working
-//    public String commitSequel(String query, ArrayList<Object> _values) {
-//        String result = "false";
-//
-//        try {
-//            Connection connect = ServerSide.con();
-//
-//            PreparedStatement statement = connect.prepareStatement(query);
-//
-//            if (_values.size() > 0) {
-//                for (int i = 0; i < _values.size(); i++) {
-//                    statement.setObject(i + 1, _values.get(i));
-//                }
-//            }
-//
-//            int rows = statement.executeUpdate();
-//
-//            if (rows > 0) {
-//                result = "true";
-//            }
-//
-//            statement.close();
-//            connect.close(); //new
-//
-//        } catch (SQLException e) {
-//            result=("SQLException\n\n" + e.getMessage().toString());
-//        } catch (Exception e) {
-//            result=("Exception\n\n" + e.getMessage().toString());
-//        }
-//        return result;
-//    }
+    public String commitSequel(String query, ArrayList<Object> _values) {
+        String result = "false";
+
+        try {
+            Connection connect = ServerSide.con();
+
+            PreparedStatement statement = connect.prepareStatement(query);
+
+            if (_values.size() > 0) {
+                for (int i = 0; i < _values.size(); i++) {
+                    statement.setObject(i + 1, _values.get(i));
+                }
+            }
+
+            int rows = statement.executeUpdate();
+
+            if (rows > 0) {
+                result = "true";
+            }
+
+            statement.close();
+            connect.close(); //new
+
+        } catch (SQLException e) {
+            result=("SQLException\n\n" + e.getMessage().toString());
+        } catch (Exception e) {
+            result=("Exception\n\n" + e.getMessage().toString());
+        }
+        return result;
+    }
 
 
     public static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
