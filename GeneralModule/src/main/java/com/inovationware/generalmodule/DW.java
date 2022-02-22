@@ -1,6 +1,7 @@
 package com.inovationware.generalmodule;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -76,7 +77,7 @@ public class DW {
 
         for (int j = 0; j <= insert_keys.size() - 1; j++) {
 //w            v += "@" + insert_keys.get(j);
-            v += _values.get(j);
+            v += toType(_values.get(j));
             if (insert_keys.size() > 1 & j != insert_keys.size() - 1)
                 v += ", ";
         }
@@ -85,6 +86,14 @@ public class DW {
         return v;
     }
 
+    private static Object toType(Object value){
+        if(((Object) value).getClass().getSimpleName() == "String"){
+            return "'" + value + "'";
+        }
+        else{
+            return value;
+        }
+    }
 
     public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
     {
