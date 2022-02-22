@@ -61,7 +61,7 @@ public class ServerSide {
     public Object readValue(String file_, String app_name) {
         String reply = "false";
         try {
-            file_ = file_;
+            //file_ = GetName(file_);
             app_name = GetName(app_name);
 
             String col = GetName(file_);
@@ -81,7 +81,6 @@ public class ServerSide {
         String reply = "false";
         try {
             app_name = GetName(app_name);
-
             String col = GetName(file_);
             String table = GetName(app_name) + "_" + col;
             ArrayList<String> insert_keys = new ArrayList<>();
@@ -90,8 +89,8 @@ public class ServerSide {
             insert_values.add(txt_);
             String query = new DW().buildInsertString(table, insert_keys);
 
+            PrepareTable(table, col);
 
-            if (rowsExist(table)) {
                 if (store == InternalTypes.InformationIsStored.OneOff) {
                     // 'update
                     query = new DW().buildUpdateString(table, insert_keys, null, null);
@@ -105,13 +104,6 @@ public class ServerSide {
                     //wreply = commitSequel(query, insert_values);
                     commitSequel(query, insert_values);
                     reply = "true";
-            } else {
-                PrepareTable(table, col);
-
-                //w reply = commitSequel(query, insert_values);
-                commitSequel(query, insert_values);
-                reply = "true";
-            }
 
         } catch (Exception ex) {
             reply= ex.getMessage();
@@ -238,6 +230,7 @@ public class ServerSide {
                 preparedStatement.executeUpdate();
 
                 preparedStatement.close();
+                connect.close();
             }
         } catch (Exception ex) {
         }
