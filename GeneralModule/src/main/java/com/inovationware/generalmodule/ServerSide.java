@@ -18,6 +18,7 @@ import static com.inovationware.generalmodule.DW.buildInsertString;
 import static com.inovationware.generalmodule.DW.buildSelectString;
 import static com.inovationware.generalmodule.DW.buildUpdateString;
 import static com.inovationware.generalmodule.NFunctions.joinTextFromSplits;
+import static com.inovationware.generalmodule.NFunctions.splitTextInTwo;
 import static com.inovationware.generalmodule.NFunctions.transformText;
 
 public class ServerSide {
@@ -327,7 +328,7 @@ public class ServerSide {
 
             if (rows != null) {
                 while (rows.next()) {
-                    result = rows.getObject(1);
+                    result = rows.getObject(col_from_query(query));
                 }
             }
             statement.close();
@@ -341,6 +342,11 @@ public class ServerSide {
 
         return result;
 
+    }
+    private String col_from_query(String query){
+        String right = splitTextInTwo(query, " ", InternalTypes.SideToReturn.Right).trim();
+        String first = splitTextInTwo(right, " ", InternalTypes.SideToReturn.Left).trim();
+        return first;
     }
 
 }
