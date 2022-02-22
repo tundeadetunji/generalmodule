@@ -68,7 +68,7 @@ public class ServerSide {
             String table = GetName(app_name) + "_" + col;
             ArrayList<String> select_params = new ArrayList<String>();
             select_params.add(col);
-            String query = buildSelectString(table, select_params, null, null, null, null);
+            String query = new DW().buildSelectString(table, select_params, null, null, null, null);
             reply= (String) qData(query);
         } catch (Exception ex) {
             reply = ex.getMessage();
@@ -79,7 +79,6 @@ public class ServerSide {
 
     public String writeValue(String file_, String txt_, String app_name, InternalTypes.InformationIsStored store) {
         String reply = "false";
-        DW dw = new DW();
         try {
             app_name = GetName(app_name);
 
@@ -89,16 +88,13 @@ public class ServerSide {
             insert_keys.add(col);
             ArrayList<Object> insert_values = new ArrayList<>();
             insert_values.add(txt_);
-            String query = buildInsertString(table, insert_keys);
+            String query = new DW().buildInsertString(table, insert_keys);
 
-
-            PrepareTable(table, col);
-            //
 
             if (rowsExist(table)) {
                 if (store == InternalTypes.InformationIsStored.OneOff) {
                     // 'update
-                    query = dw.buildUpdateString(table, insert_keys, null, null);
+                    query = new DW().buildUpdateString(table, insert_keys, null, null);
 
                     //w reply = commitSequel(query, insert_values);
                     commitSequel(query, insert_values);
@@ -110,6 +106,8 @@ public class ServerSide {
                     commitSequel(query, insert_values);
                     reply = "true";
             } else {
+                PrepareTable(table, col);
+
                 //w reply = commitSequel(query, insert_values);
                 commitSequel(query, insert_values);
                 reply = "true";
