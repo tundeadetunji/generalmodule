@@ -59,6 +59,7 @@ public class ServerSide {
     }
 
     public Object readValue(String file_, String app_name) {
+        String reply = "false";
         try {
             file_ = file_;
             app_name = GetName(app_name);
@@ -68,10 +69,11 @@ public class ServerSide {
             ArrayList<String> select_params = new ArrayList<String>();
             select_params.add(col);
             String query = buildSelectString(table, select_params, null, null, null, null);
-            return qData(query);
+            reply= (String) qData(query);
         } catch (Exception ex) {
-            return false;
+            reply = ex.getMessage();
         }
+        return reply;
     }
 
 
@@ -112,10 +114,10 @@ public class ServerSide {
                 reply = "true";
             }
 
-            return reply;
         } catch (Exception ex) {
-            return ex.getMessage();
+            reply= ex.getMessage();
         }
+        return reply;
     }
 
 
