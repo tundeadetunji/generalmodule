@@ -284,8 +284,8 @@ public class ServerSide {
         return first;
     }
 
-    public boolean commitSequel(String query, ArrayList<Object> insert_values_or_null_otherwise) {
-        boolean result = false;
+    public String commitSequel(String query, ArrayList<Object> insert_values_or_null_otherwise) {
+        String result ="false";
         ArrayList<Object> _values=insert_values_or_null_otherwise;
 
         try {
@@ -304,16 +304,16 @@ public class ServerSide {
             int rows = statement.executeUpdate();
 
             if (rows > 0) {
-                result = true;
+                result = "true";
             }
 
             statement.close();
             connect.close(); //new
 
         } catch (SQLException e) {
-            //result=("SQLException\n\n" + e.getMessage().toString());
+            result=("SQLException\n\n" + e.getMessage().toString());
         } catch (Exception e) {
-            //result=("Exception\n\n" + e.getMessage().toString());
+            result=("Exception\n\n" + e.getMessage().toString());
         }
         return result;
     }
