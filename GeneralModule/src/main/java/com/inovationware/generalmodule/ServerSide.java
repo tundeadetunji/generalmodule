@@ -284,10 +284,9 @@ public class ServerSide {
         return first;
     }
 
-    public String commitSequel(String query, ArrayList<Object> insert_values_or_null_otherwise) {
+    public String commitSequel(String query, ArrayList<Object> insert_or_update_values) {
         String result ="false";
-        ArrayList<Object> _values=insert_values_or_null_otherwise;
-
+        ArrayList<Object> _values=insert_or_update_values;
         try {
             Connection connect = ServerSide.con();
 

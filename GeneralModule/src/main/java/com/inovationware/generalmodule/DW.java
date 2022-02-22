@@ -100,13 +100,73 @@ public class DW {
 //        return v;
 //    }
 
-    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<Object> update_values, ArrayList<String> where_keys, ArrayList<Object> where_values)
+//    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
+//    {
+//        String v = "UPDATE " + t_ + " SET ";
+//
+//        for (int j = 0; j <= update_keys.size() - 1; j++)
+//        {
+//            v += update_keys.get(j) + "=@" + update_keys.get(j);
+//            if (update_keys.size() > 1 & j != update_keys.size() - 1)
+//                v += ", ";
+//        }
+//
+//        if (where_keys != null)
+//        {
+//            if (where_keys.size() > 0)
+//            {
+//                v += " WHERE (";
+//
+//                for (int k = 0; k <= where_keys.size() - 1; k++)
+//                {
+//                    v += where_keys.get(k) + "=@" + where_keys.get(k);
+//                    if (where_keys.size() > 1 & k != where_keys.size() - 1)
+//                        v += " AND ";
+//                }
+//                v += ")";
+//            }
+//        }
+//
+//        return v;
+//    }
+
+    //    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
+//    {
+//        String v = "UPDATE " + t_ + " SET ";
+//
+//        for (int j = 0; j <= update_keys.size() - 1; j++)
+//        {
+//            v += update_keys.get(j) + "=@" + update_keys.get(j);
+//            if (update_keys.size() > 1 & j != update_keys.size() - 1)
+//                v += ", ";
+//        }
+//
+//        if (where_keys != null)
+//        {
+//            if (where_keys.size() > 0)
+//            {
+//                v += " WHERE (";
+//
+//                for (int k = 0; k <= where_keys.size() - 1; k++)
+//                {
+//                    v += where_keys.get(k) + "=@" + where_keys.get(k);
+//                    if (where_keys.size() > 1 & k != where_keys.size() - 1)
+//                        v += " AND ";
+//                }
+//                v += ")";
+//            }
+//        }
+//
+//        return v;
+//    }
+
+    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys, ArrayList<Object> where_values)
     {
         String v = "UPDATE " + t_ + " SET ";
 
         for (int j = 0; j <= update_keys.size() - 1; j++)
         {
-            v += update_keys.get(j) + "=" + toType(update_values.get(j));
+            v += update_keys.get(j) + "=?"; // + update_keys.get(j);
             if (update_keys.size() > 1 & j != update_keys.size() - 1)
                 v += ", ";
         }
@@ -119,7 +179,7 @@ public class DW {
 
                 for (int k = 0; k <= where_keys.size() - 1; k++)
                 {
-                    v += where_keys.get(k) + "=" +toType(where_values.get(k));
+                    v += where_keys.get(k) + "=" + toType(where_values.get(k));
                     if (where_keys.size() > 1 & k != where_keys.size() - 1)
                         v += " AND ";
                 }
