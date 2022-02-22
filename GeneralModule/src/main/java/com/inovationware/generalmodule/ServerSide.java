@@ -277,8 +277,8 @@ public class ServerSide {
 //
 //    }
 
-    public Object qData(String query) {
-        Object result = null;
+    public boolean qData(String query) {
+        boolean result = false;
 
         try {
             Connection connect = ServerSide.con();
@@ -289,7 +289,7 @@ public class ServerSide {
 
             if (rows != null) {
                 while (rows.next()) {
-                    result = rows.getObject(col_from_query(query));
+                    result = rows.getBoolean(col_from_query(query));
                 }
             }
             statement.close();
