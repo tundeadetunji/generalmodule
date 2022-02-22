@@ -93,6 +93,7 @@ public class ServerSide {
 
 
             PrepareTable(table, col);
+            //
 
             if (rowsExist(table)) {
                 if (store == InternalTypes.InformationIsStored.OneOff) {
