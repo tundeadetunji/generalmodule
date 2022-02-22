@@ -57,43 +57,43 @@ public class ServerSide {
         }
         return conn;
     }
-
-    public void writeValue(String file, String text, String app_name, InternalTypes.InformationIsStored store) {
-
-        try {
-            String file_ = file;
-            app_name = GetName(app_name);
-
-            String col = GetName(file_);
-            String table = GetName(app_name) + "_" + col;
-
-            ArrayList<String> insert_keys = new ArrayList<String>();
-            insert_keys.add(col);
-
-            ArrayList<Object> kv = new ArrayList<Object>();
-            kv.add(col);
-            kv.add(text);
-
-            String query = buildInsertString(table, insert_keys);
-
-            PrepareTable(table, col);
-
-            if (rowsExist(table)) {
-                if (store == InternalTypes.InformationIsStored.OneOff) {
-                    // 'update
-                    query = buildUpdateString(table, insert_keys, null);
-                    commitSequel(query, kv);
-                } else {
-                    commitSequel(query, kv);
-                }
-            } else{
-                 commitSequel(query, kv);
-            }
-
-        } catch (Exception ex) {
-        }
-
-    }
+//del
+//    public void writeValue(String file, String text, String app_name, InternalTypes.InformationIsStored store) {
+//
+//        try {
+//            String file_ = file;
+//            app_name = GetName(app_name);
+//
+//            String col = GetName(file_);
+//            String table = GetName(app_name) + "_" + col;
+//
+//            ArrayList<String> insert_keys = new ArrayList<String>();
+//            insert_keys.add(col);
+//
+//            ArrayList<Object> kv = new ArrayList<Object>();
+//            kv.add(col);
+//            kv.add(text);
+//
+//            String query = buildInsertString(table, insert_keys);
+//
+//            PrepareTable(table, col);
+//
+//            if (rowsExist(table)) {
+//                if (store == InternalTypes.InformationIsStored.OneOff) {
+//                    // 'update
+//                    query = buildUpdateString(table, insert_keys, null);
+//                    commitSequel(query, kv);
+//                } else {
+//                    commitSequel(query, kv);
+//                }
+//            } else{
+//                 commitSequel(query, kv);
+//            }
+//
+//        } catch (Exception ex) {
+//        }
+//
+//    }
 
     public Object readValue(String file_, String app_name)
     {
@@ -254,30 +254,24 @@ public class ServerSide {
     }
 
 
-    public boolean commitSequel(String query, ArrayList<Object> parameters_values) {
+    public boolean commitSequel(String query) {
         boolean result = false;
-        ArrayList<Object> kv = parameters_values;
 
-        String queryStmt = query;
         try {
             Connection connect = ServerSide.con();
 
-            PreparedStatement preparedStatement = connect
-                    .prepareStatement(queryStmt);
+            Statement statement = connect.createStatement();
+            int rows = statement.executeUpdate(query);
 
-            if (parameters_values.size() > 0){
-                for (int i = 0; i <= kv.size()-1; i++){
-                    preparedStatement.setObject(i+1, kv.get(i));
-                }
+            if (rows > 0){
+                result = true;
             }
 
-            preparedStatement.executeUpdate();
-
-            preparedStatement.close();
-            result = true;
+            statement.close();
+            connect.close(); //new
 
         } catch (SQLException e) {
-            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+            //textDetails.setText("SQLException\n\n" + e.getMessage().toS0tring());
         } catch (Exception e) {
             //textDetails.setText("Exception\n\n" + e.getMessage().toString());
         }
@@ -298,12 +292,11 @@ String result = null;
                 }
             }
             statement.close();
+            connect.close(); //new
         } catch (SQLException e) {
             //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
-            result = e.getMessage().toString();
         } catch (Exception e) {
             //textDetails.setText("Exception\n\n" + e.getMessage().toString());
-            result = e.getMessage().toString();
         }
 
         return result;
