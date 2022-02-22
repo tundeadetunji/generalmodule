@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DW {
-    private static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
+    public static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
         String v = "SELECT ";
 
         if (select_params != null) {
@@ -38,12 +38,35 @@ public class DW {
         return v;
     }
 
-    private static String buildInsertString(String t_, ArrayList<String> insert_keys)
-    {
+
+//    public static String buildInsertString(String t_, ArrayList<String> insert_keys)
+//    {
+//        String v = "INSERT INTO " + t_ + " (";
+//
+//        for (int i = 0; i <= insert_keys.size() - 1; i++)
+//        {
+//            v += insert_keys.get(i);
+//            if (insert_keys.size() > 1 & i != insert_keys.size() - 1)
+//                v += ", ";
+//        }
+//
+//        v += ") VALUES (";
+//
+//        for (int j = 0; j <= insert_keys.size() - 1; j++)
+//        {
+//            v += "@" + insert_keys.get(j);
+//            if (insert_keys.size() > 1 & j != insert_keys.size() - 1)
+//                v += ", ";
+//        }
+//
+//        v += ")";
+//        return v;
+//    }
+
+    public static String buildInsertString(String t_, ArrayList<String> insert_keys, ArrayList<String> _values) {
         String v = "INSERT INTO " + t_ + " (";
 
-        for (int i = 0; i <= insert_keys.size() - 1; i++)
-        {
+        for (int i = 0; i <= insert_keys.size() - 1; i++) {
             v += insert_keys.get(i);
             if (insert_keys.size() > 1 & i != insert_keys.size() - 1)
                 v += ", ";
@@ -51,9 +74,9 @@ public class DW {
 
         v += ") VALUES (";
 
-        for (int j = 0; j <= insert_keys.size() - 1; j++)
-        {
-            v += "@" + insert_keys.get(j);
+        for (int j = 0; j <= insert_keys.size() - 1; j++) {
+//w            v += "@" + insert_keys.get(j);
+            v += _values.get(j);
             if (insert_keys.size() > 1 & j != insert_keys.size() - 1)
                 v += ", ";
         }
@@ -62,7 +85,8 @@ public class DW {
         return v;
     }
 
-    private static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
+
+    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
     {
         String v = "UPDATE " + t_ + " SET ";
 
