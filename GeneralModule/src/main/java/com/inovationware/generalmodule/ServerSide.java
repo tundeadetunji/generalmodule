@@ -304,8 +304,8 @@ public class ServerSide {
         return first;
     }
 
-    public boolean commitSequel(String query, ArrayList<Object> _values) {
-        boolean result = false;
+    public String commitSequel(String query, ArrayList<Object> _values) {
+        String result = "false";
 
         try {
             Connection connect = ServerSide.con();
@@ -321,16 +321,16 @@ public class ServerSide {
             int rows = statement.executeUpdate();
 
             if (rows > 0) {
-                result = true;
+                result = "true";
             }
 
             statement.close();
             connect.close(); //new
 
         } catch (SQLException e) {
-            //textDetails.setText("SQLException\n\n" + e.getMessage().toS0tring());
+            result=("SQLException\n\n" + e.getMessage().toString());
         } catch (Exception e) {
-            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+            result=("Exception\n\n" + e.getMessage().toString());
         }
         return result;
     }
