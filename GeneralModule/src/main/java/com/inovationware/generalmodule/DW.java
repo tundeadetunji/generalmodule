@@ -88,7 +88,7 @@ public class DW {
 
     private static Object toType(Object value){
         if(((Object) value).getClass().getSimpleName() == "String"){
-            return "'" + value + "'";
+            return "''" + value.toString() + "''";
         }
         else{
             return value;
