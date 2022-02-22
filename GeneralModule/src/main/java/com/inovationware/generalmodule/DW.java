@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DW {
-    public static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
+    private static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
         String v = "SELECT ";
 
         if (select_params != null) {
@@ -38,7 +38,7 @@ public class DW {
         return v;
     }
 
-    public static String buildInsertString(String t_, ArrayList<String> insert_keys)
+    private static String buildInsertString(String t_, ArrayList<String> insert_keys)
     {
         String v = "INSERT INTO " + t_ + " (";
 
@@ -62,7 +62,7 @@ public class DW {
         return v;
     }
 
-    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
+    private static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys)
     {
         String v = "UPDATE " + t_ + " SET ";
 

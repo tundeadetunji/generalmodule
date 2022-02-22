@@ -95,10 +95,8 @@ public class ServerSide {
 //
 //    }
 
-    public Object readValue(String file_, String app_name)
-    {
-        try
-        {
+    public Object readValue(String file_, String app_name) {
+        try {
             file_ = file_;
             app_name = GetName(app_name);
 
@@ -108,9 +106,7 @@ public class ServerSide {
             select_params.add(col);
             String query = buildSelectString(table, select_params, null, null, InternalTypes.OrderBy.ASC);
             return qData(query);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             return false;
         }
     }
@@ -136,7 +132,6 @@ public class ServerSide {
 //        }
 //
 //    }
-
 
 
     private static String GetName(String str__) {
@@ -228,7 +223,7 @@ public class ServerSide {
         return hasData;
     }
 
-    public boolean tableExists(String table){
+    public boolean tableExists(String table) {
         return rowsExist(table);
     }
 
@@ -254,7 +249,7 @@ public class ServerSide {
     }
 
 
-    public boolean commitSequel(String query) {
+    public boolean commitSequel_WORKING(String query) {
         boolean result = false;
 
         try {
@@ -263,7 +258,7 @@ public class ServerSide {
             Statement statement = connect.createStatement();
             int rows = statement.executeUpdate(query);
 
-            if (rows > 0){
+            if (rows > 0) {
                 result = true;
             }
 
@@ -279,7 +274,7 @@ public class ServerSide {
     }
 
     public String qData(String query) {
-String result = null;
+        String result = null;
         try {
             Connection connect = ServerSide.con();
 
@@ -302,10 +297,121 @@ String result = null;
         return result;
 
     }
-    private String col_from_query(String query){
+
+    private String col_from_query(String query) {
         String right = splitTextInTwo(query, " ", InternalTypes.SideToReturn.Right).trim();
         String first = splitTextInTwo(right, " ", InternalTypes.SideToReturn.Left).trim();
         return first;
+    }
+
+    public boolean commitSequel(String query, ArrayList<Object> _values) {
+        boolean result = false;
+
+        try {
+            Connection connect = ServerSide.con();
+
+            PreparedStatement statement = connect.prepareStatement(query);
+
+            if (_values.size() > 0) {
+                for (int i = 0; i < _values.size(); i++) {
+                    statement.setObject(i + 1, _values.get(i));
+                }
+            }
+
+            int rows = statement.executeUpdate();
+
+            if (rows > 0) {
+                result = true;
+            }
+
+            statement.close();
+            connect.close(); //new
+
+        } catch (SQLException e) {
+            //textDetails.setText("SQLException\n\n" + e.getMessage().toS0tring());
+        } catch (Exception e) {
+            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+        }
+        return result;
+    }
+
+
+    public static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
+        String v = "SELECT ";
+
+        if (select_params != null) {
+            for (int i = 0; i <= select_params.size() - 1; i++) {
+                v += select_params.get(i);
+                if (select_params.size() > 1 & i != select_params.size() - 1)
+                    v += ", ";
+            }
+        } else
+            v += " *";
+        v += " FROM " + t_;
+
+        if (where_keys != null) {
+            if (where_keys.size() > 0) {
+                v += " WHERE (";
+                for (int j = 0; j <= where_keys.size() - 1; j++) {
+                    v += where_keys.get(j) + "=@" + where_keys.get(j);
+                    if (where_keys.size() > 1 & j != where_keys.size() - 1)
+                        v += " AND ";
+                }
+            }
+            v += ")";
+        }
+        if (OrderByField != null)
+            v += " ORDER BY " + OrderByField;
+        if (OrderByField != null)
+            v += " " + order_by.toString();
+        return v;
+    }
+
+    public static String buildInsertString(String t_, ArrayList<String> insert_keys, ArrayList<String> _values) {
+        String v = "INSERT INTO " + t_ + " (";
+
+        for (int i = 0; i <= insert_keys.size() - 1; i++) {
+            v += insert_keys.get(i);
+            if (insert_keys.size() > 1 & i != insert_keys.size() - 1)
+                v += ", ";
+        }
+
+        v += ") VALUES (";
+
+        for (int j = 0; j <= insert_keys.size() - 1; j++) {
+//w            v += "@" + insert_keys.get(j);
+            v += _values.get(j);
+            if (insert_keys.size() > 1 & j != insert_keys.size() - 1)
+                v += ", ";
+        }
+
+        v += ")";
+        return v;
+    }
+
+    public static String buildUpdateString(String t_, ArrayList<String> update_keys, ArrayList<String> where_keys) {
+        String v = "UPDATE " + t_ + " SET ";
+
+        for (int j = 0; j <= update_keys.size() - 1; j++) {
+            v += update_keys.get(j) + "=@" + update_keys.get(j);
+            if (update_keys.size() > 1 & j != update_keys.size() - 1)
+                v += ", ";
+        }
+
+        if (where_keys != null) {
+            if (where_keys.size() > 0) {
+                v += " WHERE (";
+
+                for (int k = 0; k <= where_keys.size() - 1; k++) {
+                    v += where_keys.get(k) + "=@" + where_keys.get(k);
+                    if (where_keys.size() > 1 & k != where_keys.size() - 1)
+                        v += " AND ";
+                }
+                v += ")";
+            }
+        }
+
+        return v;
     }
 
 }
