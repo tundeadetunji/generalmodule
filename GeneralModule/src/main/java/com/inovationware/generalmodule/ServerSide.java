@@ -284,8 +284,8 @@ public class ServerSide {
         return result;
     }
 
-    public Object qData(String query) {
-Object result = null;
+    public String qData(String query) {
+String result = null;
         try {
             Connection connect = ServerSide.con();
 
@@ -294,7 +294,7 @@ Object result = null;
 
             if (rows != null) {
                 while (rows.next()) {
-                    result = rows.getObject(col_from_query(query));
+                    result = rows.getString(col_from_query(query));
                 }
             }
             statement.close();
