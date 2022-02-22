@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DW {
-//    public static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, String OrderByField, InternalTypes.OrderBy order_by) {
+
+    //working
+//    public static String buildSelectString(String t_, ArrayList<String> select_params, ArrayList<String> where_keys, ArrayList<Object> _values, String OrderByField, InternalTypes.OrderBy order_by) {
 //        String v = "SELECT ";
 //
 //        if (select_params != null) {
@@ -25,7 +27,7 @@ public class DW {
 //            if (where_keys.size() > 0) {
 //                v += " WHERE (";
 //                for (int j = 0; j <= where_keys.size() - 1; j++) {
-//                    v += where_keys.get(j) + "=@" + where_keys.get(j);
+//                    v += where_keys.get(j) + "=" + toType(_values.get(j));
 //                    if (where_keys.size() > 1 & j != where_keys.size() - 1)
 //                        v += " AND ";
 //                }
@@ -34,7 +36,7 @@ public class DW {
 //        }
 //        if (OrderByField != null)
 //            v += " ORDER BY " + OrderByField;
-//        if (OrderByField != null)
+//        if (OrderByField != null & order_by != null)
 //            v += " " + order_by.toString();
 //        return v;
 //    }

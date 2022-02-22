@@ -249,13 +249,15 @@ public class ServerSide {
         }
     }
 
-//working
+//    working (remove the catch return strings)
 //    public String qData(String query) {
 //        String result = null;
+//
 //        try {
 //            Connection connect = ServerSide.con();
 //
 //            Statement statement = connect.createStatement();
+//
 //            ResultSet rows = statement.executeQuery(query);
 //
 //            if (rows != null) {
@@ -266,17 +268,17 @@ public class ServerSide {
 //            statement.close();
 //            connect.close(); //new
 //        } catch (SQLException e) {
-//            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
+//            result = ("SQLException\n\n" + e.getMessage().toString());
 //        } catch (Exception e) {
-//            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
+//            result=("Exception\n\n" + e.getMessage().toString());
 //        }
 //
 //        return result;
 //
 //    }
 
-    public String qData(String query) {
-        String result = null;
+    public Object qData(String query) {
+        Object result = null;
 
         try {
             Connection connect = ServerSide.con();
@@ -287,15 +289,15 @@ public class ServerSide {
 
             if (rows != null) {
                 while (rows.next()) {
-                    result = rows.getString(col_from_query(query));
+                    result = rows.getObject(col_from_query(query));
                 }
             }
             statement.close();
             connect.close(); //new
         } catch (SQLException e) {
-            result = ("SQLException\n\n" + e.getMessage().toString());
+            //result = ("SQLException\n\n" + e.getMessage().toString());
         } catch (Exception e) {
-            result=("Exception\n\n" + e.getMessage().toString());
+            //result=("Exception\n\n" + e.getMessage().toString());
         }
 
         return result;
