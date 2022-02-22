@@ -107,7 +107,7 @@ public class ServerSide {
             ArrayList<String> select_params = new ArrayList<String>();
             select_params.add(col);
             String query = buildSelectString(table, select_params, null, null, InternalTypes.OrderBy.ASC);
-            return qData(query, null);
+            return qData(query);
         }
         catch (Exception ex)
         {
@@ -137,29 +137,7 @@ public class ServerSide {
 //
 //    }
 
-//    private Object readValue() {
-//        Object settings = null;
-//        try {
-//            Connection connect = ServerSide.con();
-//
-//            String queryStmt = "SELECT Settings FROM Windowsapplication999_Settings ORDER BY RecordSerial ASC";
-//
-//            Statement statement = connect.createStatement();
-//            ResultSet rows = statement.executeQuery(queryStmt);
-//
-//            while (rows.next()) {
-//                settings = rows.getString("Settings");
-//            }
-//            statement.close();
-//        } catch (SQLException e) {
-//            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
-//        } catch (Exception e) {
-//            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
-//        }
-//
-//        return settings;
-//
-//    }
+
 
     private static String GetName(String str__) {
         String file__ = str__.replace("_", " ");
@@ -306,24 +284,12 @@ public class ServerSide {
         return result;
     }
 
-    public Object qData(String query, ArrayList<Object> parameters_values) {
-        Object result = null;
-        ArrayList<Object> kv = parameters_values;
-
-//        String queryStmt = query;
+    public Object qData(String query) {
+Object result = null;
         try {
             Connection connect = ServerSide.con();
 
             Statement statement = connect.createStatement();
-//            if (parameters_values != null){
-//                if (parameters_values.size() > 0){
-//                    for (int i = 0; i < kv.size(); i++){
-//                        preparedStatement.setObject(i+1, kv.get(i));
-//                    }
-//                }
-//            }
-
-            //ResultSet rows = preparedStatement.executeQuery(queryStmt);
             ResultSet rows = statement.executeQuery(query);
 
             if (rows != null) {
