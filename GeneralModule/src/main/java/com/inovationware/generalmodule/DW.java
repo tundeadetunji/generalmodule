@@ -63,7 +63,7 @@ public class DW {
 //        return v;
 //    }
 
-    public static String buildInsertString(String t_, ArrayList<String> insert_keys, ArrayList<String> _values) {
+    public static String buildInsertString(String t_, ArrayList<Object> insert_keys, ArrayList<String> _values) {
         String v = "INSERT INTO " + t_ + " (";
 
         for (int i = 0; i <= insert_keys.size() - 1; i++) {
