@@ -57,43 +57,67 @@ public class ServerSide {
         }
         return conn;
     }
-//del
-//    public void writeValue(String file, String text, String app_name, InternalTypes.InformationIsStored store) {
-//
-//        try {
-//            String file_ = file;
-//            app_name = GetName(app_name);
-//
-//            String col = GetName(file_);
-//            String table = GetName(app_name) + "_" + col;
-//
-//            ArrayList<String> insert_keys = new ArrayList<String>();
-//            insert_keys.add(col);
-//
-//            ArrayList<Object> kv = new ArrayList<Object>();
-//            kv.add(col);
-//            kv.add(text);
-//
-//            String query = buildInsertString(table, insert_keys);
-//
-//            PrepareTable(table, col);
-//
-//            if (rowsExist(table)) {
-//                if (store == InternalTypes.InformationIsStored.OneOff) {
-//                    // 'update
-//                    query = buildUpdateString(table, insert_keys, null);
-//                    commitSequel(query, kv);
-//                } else {
-//                    commitSequel(query, kv);
-//                }
-//            } else{
-//                 commitSequel(query, kv);
-//            }
-//
-//        } catch (Exception ex) {
-//        }
-//
-//    }
+
+    public Object readValue(String file_, String app_name) {
+        try {
+            file_ = file_;
+            app_name = GetName(app_name);
+
+            String col = GetName(file_);
+            String table = GetName(app_name) + "_" + col;
+            ArrayList<String> select_params = new ArrayList<String>();
+            select_params.add(col);
+            String query = buildSelectString(table, select_params, null, null, null, null);
+            return qData(query);
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+
+    public String writeValue(String file_, String txt_, String app_name, InternalTypes.InformationIsStored store) {
+        String reply = "false";
+        DW dw = new DW();
+        try {
+            app_name = GetName(app_name);
+
+            String col = GetName(file_);
+            String table = GetName(app_name) + "_" + col;
+            ArrayList<String> insert_keys = new ArrayList<>();
+            insert_keys.add(col);
+            ArrayList<Object> insert_values = new ArrayList<>();
+            insert_values.add(txt_);
+            String query = buildInsertString(table, insert_keys);
+
+
+            PrepareTable(table, col);
+
+            if (rowsExist(table)) {
+                if (store == InternalTypes.InformationIsStored.OneOff) {
+                    // 'update
+                    query = dw.buildUpdateString(table, insert_keys, null, null);
+
+                    //w reply = commitSequel(query, insert_values);
+                    commitSequel(query, insert_values);
+                    reply = "true";
+                } else
+                    // 'create
+
+                    //wreply = commitSequel(query, insert_values);
+                    commitSequel(query, insert_values);
+                    reply = "true";
+            } else {
+                //w reply = commitSequel(query, insert_values);
+                commitSequel(query, insert_values);
+                reply = "true";
+            }
+
+            return reply;
+        } catch (Exception ex) {
+            return ex.getMessage();
+        }
+    }
+
 
     //working
 //    public Object readValue(String file_, String app_name) {
@@ -145,60 +169,29 @@ public class ServerSide {
         return joinTextFromSplits(l, "");
     }
 
-//    public boolean tableExists(String table) {
-//        boolean exists = false;
-//        ArrayList<String> names = new ArrayList<String>();
+//    private boolean tableHasData_WORKING(String table) {
+//        boolean hasData = false;
 //        try {
 //            Connection connect = ServerSide.con();
 //
-//            ArrayList<String> select_params = new ArrayList<String>();
-//            select_params.add("name");
-//            String queryStmt = buildSelectString(table, select_params, null, "name", InternalTypes.OrderBy.ASC);
+//            String queryStmt = "SELECT * FROM " + table;
 //
 //            Statement statement = connect.createStatement();
 //            ResultSet rows = statement.executeQuery(queryStmt);
 //
+//            int size = 0;
 //            if (rows != null) {
-//                while (rows.next()) {
-//                    names.add(rows.getString("name").toLowerCase());
-//                }
+//                hasData = true;
 //            }
+//
 //            statement.close();
 //        } catch (SQLException e) {
 //            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
 //        } catch (Exception e) {
 //            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
 //        }
-//
-//        if (names.contains(table.toLowerCase())) {
-//            exists = true;
-//        }
-//        return exists;
+//        return hasData;
 //    }
-
-    private boolean tableHasData_WORKING(String table) {
-        boolean hasData = false;
-        try {
-            Connection connect = ServerSide.con();
-
-            String queryStmt = "SELECT * FROM " + table;
-
-            Statement statement = connect.createStatement();
-            ResultSet rows = statement.executeQuery(queryStmt);
-
-            int size = 0;
-            if (rows != null) {
-                hasData = true;
-            }
-
-            statement.close();
-        } catch (SQLException e) {
-            //textDetails.setText("SQLException\n\n" + e.getMessage().toString());
-        } catch (Exception e) {
-            //textDetails.setText("Exception\n\n" + e.getMessage().toString());
-        }
-        return hasData;
-    }
 
     public boolean rowsExist(String table) {
         boolean hasData = false;
@@ -249,7 +242,6 @@ public class ServerSide {
         }
     }
 
-
     public Object qData(String query) {
         Object result = null;
 
@@ -277,22 +269,21 @@ public class ServerSide {
 
     }
 
-
     private String col_from_query(String query) {
         String right = splitTextInTwo(query, " ", InternalTypes.SideToReturn.Right).trim();
         String first = splitTextInTwo(right, " ", InternalTypes.SideToReturn.Left).trim();
         return first;
     }
 
-    public String commitSequel(String query, ArrayList<Object> insert_or_update_values) {
-        String result ="false";
-        ArrayList<Object> _values=insert_or_update_values;
+    public boolean commitSequel(String query, ArrayList<Object> insert_or_update_values) {
+        boolean result = false;
+        ArrayList<Object> _values = insert_or_update_values;
         try {
             Connection connect = ServerSide.con();
 
             PreparedStatement statement = connect.prepareStatement(query);
 
-            if (_values != null){
+            if (_values != null) {
                 if (_values.size() > 0) {
                     for (int i = 0; i < _values.size(); i++) {
                         statement.setObject(i + 1, _values.get(i));
@@ -303,16 +294,16 @@ public class ServerSide {
             int rows = statement.executeUpdate();
 
             if (rows > 0) {
-                result = "true";
+                result = true;
             }
 
             statement.close();
             connect.close(); //new
 
         } catch (SQLException e) {
-            result=("SQLException\n\n" + e.getMessage().toString());
+            //result=("SQLException\n\n" + e.getMessage().toString());
         } catch (Exception e) {
-            result=("Exception\n\n" + e.getMessage().toString());
+            //result=("Exception\n\n" + e.getMessage().toString());
         }
         return result;
     }
